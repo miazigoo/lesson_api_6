@@ -70,11 +70,11 @@ def upload_an_image_to_the_server(filename, access_token, group_id, vk_api_versi
         }
         up_response = requests.post(upload_url, files=files)
         up_response.raise_for_status()
-        upload_photo = up_response.json()
-        photo = upload_photo['photo']
-        server = upload_photo['server']
-        hash_vk = upload_photo['hash']
-        return photo, server, hash_vk
+    upload_photo = up_response.json()
+    photo = upload_photo['photo']
+    server = upload_photo['server']
+    hash_vk = upload_photo['hash']
+    return photo, server, hash_vk
 
 
 def save_wall_photo(photo, server, vk_hash, access_token, group_id, vk_api_version):
