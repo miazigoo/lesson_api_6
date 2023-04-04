@@ -77,7 +77,7 @@ def upload_an_image_to_the_server(filename, access_token, group_id, vk_api_versi
         return photo, server, hash_vk
 
 
-def save_wall_photo(photo, server, hash_vk, access_token, group_id, vk_api_version):
+def save_wall_photo(photo, server, vk_hash, access_token, group_id, vk_api_version):
     """ Сохраняем комикс на сервере """
     url = f'https://api.vk.com/method/photos.saveWallPhoto'
     params = {
@@ -85,7 +85,7 @@ def save_wall_photo(photo, server, hash_vk, access_token, group_id, vk_api_versi
         'group_id': group_id,
         'photo': photo,
         'server': server,
-        'hash': hash_vk,
+        'hash': vk_hash,
         'v': vk_api_version,
     }
     response = requests.post(url, params=params)
@@ -121,9 +121,9 @@ def main():
     comic_url = get_random_comic_url()
     alt, filename, img_url = get_alt_filename_url(comic_url)
     fetch_comic(img_url, filename)
-    photo, server, hash_vk = upload_an_image_to_the_server(filename, access_token, group_id, vk_api_version)
+    photo, server, vk_hash = upload_an_image_to_the_server(filename, access_token, group_id, vk_api_version)
 
-    owner_id, photo_id = save_wall_photo(photo, server, hash_vk, access_token, group_id, vk_api_version)
+    owner_id, photo_id = save_wall_photo(photo, server, vk_hash, access_token, group_id, vk_api_version)
     wall_post_vk(owner_id, photo_id, alt, access_token, group_id, vk_api_version)
     os.remove(f"{filename}")
 
