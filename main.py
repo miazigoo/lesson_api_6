@@ -26,15 +26,15 @@ def get_filename_and_ext(img_url):
     return filename, extension
 
 
-def get_random_comics_url():
+def get_random_comic_url():
     """ Получаем рандомный комикс """
     url = 'https://xkcd.com/info.0.json'
     response = requests.get(url)
     response.raise_for_status()
     all_comics_num = response.json()['num']
     random_comics_num = random.randint(1, (all_comics_num + 1))
-    comics_url = f'https://xkcd.com/{random_comics_num}/info.0.json'
-    return comics_url
+    comic_url = f'https://xkcd.com/{random_comics_num}/info.0.json'
+    return comic_url
 
 
 def fetch_comic(url):
@@ -127,9 +127,9 @@ def main():
     access_token = os.environ['VK_ACCESS_TOKEN']
     group_id = os.environ['VK_GROUP_ID']
     vk_api_version = 5.131
-    comics_url = get_random_comics_url()
-    fetch_comic(comics_url)
-    alt, filename = get_alt_filename(comics_url)
+    comic_url = get_random_comic_url()
+    fetch_comic(comic_url)
+    alt, filename = get_alt_filename(comic_url)
     photo, server, hash_vk = get_wall_upload_server(filename, access_token, group_id, vk_api_version)
 
     owner_id, photo_id = save_wall_photo(photo, server, hash_vk, access_token, group_id, vk_api_version)
