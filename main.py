@@ -7,13 +7,11 @@ from os.path import (splitext, split)
 from urllib.parse import (urlsplit, unquote)
 
 
-def download_img(img_url, img_name, imgs_path):
+def download_img(img_url, img_name):
     """ Download the comics """
-    img_path = Path(imgs_path)
-    img_path.mkdir(parents=True, exist_ok=True)
     response = requests.get(img_url)
     response.raise_for_status()
-    with open(f'{img_path}/{img_name}', 'wb') as file:
+    with open(f'{img_name}', 'wb') as file:
         file.write(response.content)
 
 
@@ -37,31 +35,24 @@ def get_random_comic_url():
     return comic_url
 
 
-def fetch_comic(url):
-    """ Скачиваем комикс """
-    response = requests.get(url)
-    response.raise_for_status()
-    comic = response.json()
-
-    img_url = comic['img']
-    filename, _ = get_filename_and_ext(img_url)
-    comics_path = 'comics'
-    download_img(img_url, filename, comics_path)
-    return "Download comic Success"
-
-
-def get_alt_filename(url):
+def get_alt_filename_url(comic_url):
     """ Получаем запись к комиксу и его название """
-    response = requests.get(url)
+    response = requests.get(comic_url)
     response.raise_for_status()
     comic = response.json()
     img_url = comic['img']
     alt = comic['alt']
     filename, _ = get_filename_and_ext(img_url)
-    return alt, filename
+    return alt, filename, img_url
 
 
-def get_wall_upload_server(filename, access_token, group_id, vk_api_version):
+def fetch_comic(img_url, filename):
+    """ Скачиваем комикс """
+    download_img(img_url, filename)
+    return "Download comic Success"
+
+
+def upload_an_image_to_the_server(filename, access_token, group_id, vk_api_version):
     """ Загружаем комикс на сервер ВК """
     url = f'https://api.vk.com/method/photos.getWallUploadServer?'
     params = {
@@ -128,13 +119,13 @@ def main():
     group_id = os.environ['VK_GROUP_ID']
     vk_api_version = 5.131
     comic_url = get_random_comic_url()
-    fetch_comic(comic_url)
-    alt, filename = get_alt_filename(comic_url)
-    photo, server, hash_vk = get_wall_upload_server(filename, access_token, group_id, vk_api_version)
+    alt, filename, img_url = get_alt_filename_url(comic_url)
+    fetch_comic(img_url, filename)
+    photo, server, hash_vk = upload_an_image_to_the_server(filename, access_token, group_id, vk_api_version)
 
     owner_id, photo_id = save_wall_photo(photo, server, hash_vk, access_token, group_id, vk_api_version)
     wall_post_vk(owner_id, photo_id, alt, access_token, group_id, vk_api_version)
-    os.remove(f"comics/{filename}")
+    os.remove(f"{filename}")
 
 
 if __name__ == '__main__':
