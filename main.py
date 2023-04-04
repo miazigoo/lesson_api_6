@@ -64,7 +64,7 @@ def upload_an_image_to_the_server(filename, access_token, group_id, vk_api_versi
     response.raise_for_status()
     upload_url = response.json()['response']['upload_url']
 
-    with open(f'comics/{filename}', 'rb') as file:
+    with open(f'{filename}', 'rb') as file:
         files = {
             'photo': file,
         }
@@ -126,7 +126,8 @@ def main():
         owner_id, photo_id = save_wall_photo(photo, server, vk_hash, access_token, group_id, vk_api_version)
         publish_wall_post_vk(owner_id, photo_id, alt, access_token, group_id, vk_api_version)
     finally:
-        os.remove(f"{filename}")
+        file = Path(f"{filename}")
+        os.remove(file)
 
 
 if __name__ == '__main__':
