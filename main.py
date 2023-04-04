@@ -121,11 +121,12 @@ def main():
     comic_url = get_random_comic_url()
     alt, filename, img_url = get_alt_filename_url(comic_url)
     fetch_comic(img_url, filename)
-    photo, server, vk_hash = upload_an_image_to_the_server(filename, access_token, group_id, vk_api_version)
-
-    owner_id, photo_id = save_wall_photo(photo, server, vk_hash, access_token, group_id, vk_api_version)
-    publish_wall_post_vk(owner_id, photo_id, alt, access_token, group_id, vk_api_version)
-    os.remove(f"{filename}")
+    try:
+        photo, server, vk_hash = upload_an_image_to_the_server(filename, access_token, group_id, vk_api_version)
+        owner_id, photo_id = save_wall_photo(photo, server, vk_hash, access_token, group_id, vk_api_version)
+        publish_wall_post_vk(owner_id, photo_id, alt, access_token, group_id, vk_api_version)
+    finally:
+        os.remove(f"{filename}")
 
 
 if __name__ == '__main__':
