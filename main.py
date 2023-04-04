@@ -37,17 +37,27 @@ def get_random_comics_url():
     return comics_url
 
 
-def fetch_comics_and_get_alt_filename(url):
-    """ Скачиваем комикс, получаем запись к комиксу и название """
+def fetch_comic(url):
+    """ Скачиваем комикс """
     response = requests.get(url)
     response.raise_for_status()
-    comics = response.json()
+    comic = response.json()
 
-    img_url = comics['img']
-    alt = comics['alt']
+    img_url = comic['img']
     filename, _ = get_filename_and_ext(img_url)
     comics_path = 'comics'
     download_img(img_url, filename, comics_path)
+    return "Download comic Success"
+
+
+def get_alt_filename(url):
+    """ Получаем запись к комиксу и его название """
+    response = requests.get(url)
+    response.raise_for_status()
+    comic = response.json()
+    img_url = comic['img']
+    alt = comic['alt']
+    filename, _ = get_filename_and_ext(img_url)
     return alt, filename
 
 
@@ -118,7 +128,8 @@ def main():
     group_id = os.environ['VK_GROUP_ID']
     vk_api_version = 5.131
     comics_url = get_random_comics_url()
-    alt, filename = fetch_comics_and_get_alt_filename(comics_url)
+    fetch_comic(comics_url)
+    alt, filename = get_alt_filename(comics_url)
     photo, server, hash_vk = get_wall_upload_server(filename, access_token, group_id, vk_api_version)
 
     owner_id, photo_id = save_wall_photo(photo, server, hash_vk, access_token, group_id, vk_api_version)
