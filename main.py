@@ -90,9 +90,9 @@ def save_wall_photo(photo, server, vk_hash, access_token, group_id, vk_api_versi
     }
     response = requests.post(url, params=params)
     response.raise_for_status()
-    upload_vk = response.json()['response'][0]
-    owner_id = upload_vk['owner_id']
-    photo_id = upload_vk['id']
+    photo_owner = response.json()['response'][0]
+    owner_id = photo_owner['owner_id']
+    photo_id = photo_owner['id']
     return owner_id, photo_id
 
 
