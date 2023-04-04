@@ -96,7 +96,7 @@ def save_wall_photo(photo, server, vk_hash, access_token, group_id, vk_api_versi
     return owner_id, photo_id
 
 
-def wall_post_vk(owner_id, photo_id, alt, access_token, group_id, vk_api_version):
+def publish_wall_post_vk(owner_id, photo_id, alt, access_token, group_id, vk_api_version):
     """ Публикуем на стене группы ВК """
     url = f'https://api.vk.com/method/wall.post'
     attachments = f'photo{owner_id}_{photo_id}'
@@ -124,7 +124,7 @@ def main():
     photo, server, vk_hash = upload_an_image_to_the_server(filename, access_token, group_id, vk_api_version)
 
     owner_id, photo_id = save_wall_photo(photo, server, vk_hash, access_token, group_id, vk_api_version)
-    wall_post_vk(owner_id, photo_id, alt, access_token, group_id, vk_api_version)
+    publish_wall_post_vk(owner_id, photo_id, alt, access_token, group_id, vk_api_version)
     os.remove(f"{filename}")
 
 
