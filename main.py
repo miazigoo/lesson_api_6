@@ -7,7 +7,7 @@ from os.path import splitext, split
 from urllib.parse import urlsplit, unquote
 
 
-def download_img(img_url, img_name):
+def download_comic(img_url, img_name):
     """ Скачиваем комикс """
     response = requests.get(img_url)
     response.raise_for_status()
@@ -51,12 +51,6 @@ def get_alt_filename_url(comic_url):
     alt = comic['alt']
     filename, _ = get_filename_and_ext(img_url)
     return alt, filename, img_url
-
-
-def fetch_comic(img_url, filename):
-    """ Скачиваем комикс """
-    download_img(img_url, filename)
-    return "Download comic Success"
 
 
 def upload_an_image_to_the_server(filename, access_token, group_id, vk_api_version):
@@ -126,7 +120,7 @@ def main():
     group_id = os.environ['VK_GROUP_ID']
     vk_api_version = 5.131
     comic_url, alt, filename, img_url = get_random_comic()
-    fetch_comic(img_url, filename)
+    download_comic(img_url, filename)
     try:
         photo, server, vk_hash = upload_an_image_to_the_server(filename, access_token, group_id, vk_api_version)
         owner_id, photo_id = save_wall_photo(photo, server, vk_hash, access_token, group_id, vk_api_version)
