@@ -3,8 +3,8 @@ import random
 import requests
 from pathlib import Path
 from dotenv import load_dotenv
-from os.path import (splitext, split)
-from urllib.parse import (urlsplit, unquote)
+from os.path import splitext, split
+from urllib.parse import urlsplit, unquote
 
 
 def download_img(img_url, img_name):
