@@ -8,7 +8,7 @@ from urllib.parse import urlsplit, unquote
 
 
 def download_img(img_url, img_name):
-    """ Download the comics """
+    """ Скачиваем комикс """
     response = requests.get(img_url)
     response.raise_for_status()
     with open(f'{img_name}', 'wb') as file:
@@ -24,7 +24,7 @@ def get_filename_and_ext(img_url):
     return filename, extension
 
 
-def get_random_comic_url():
+def get_random_comic():
     """ Получаем рандомный комикс """
     url = 'https://xkcd.com/info.0.json'
     response = requests.get(url)
@@ -32,7 +32,14 @@ def get_random_comic_url():
     all_comics_num = response.json()['num']
     random_comics_num = random.randint(1, (all_comics_num + 1))
     comic_url = f'https://xkcd.com/{random_comics_num}/info.0.json'
-    return comic_url
+
+    comic_response = requests.get(comic_url)
+    comic_response.raise_for_status()
+    comic = comic_response.json()
+    img_url = comic['img']
+    alt = comic['alt']
+    filename, _ = get_filename_and_ext(img_url)
+    return comic_url, alt, filename, img_url
 
 
 def get_alt_filename_url(comic_url):
@@ -118,8 +125,7 @@ def main():
     access_token = os.environ['VK_ACCESS_TOKEN']
     group_id = os.environ['VK_GROUP_ID']
     vk_api_version = 5.131
-    comic_url = get_random_comic_url()
-    alt, filename, img_url = get_alt_filename_url(comic_url)
+    comic_url, alt, filename, img_url = get_random_comic()
     fetch_comic(img_url, filename)
     try:
         photo, server, vk_hash = upload_an_image_to_the_server(filename, access_token, group_id, vk_api_version)
