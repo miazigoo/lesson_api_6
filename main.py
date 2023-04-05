@@ -70,7 +70,7 @@ def upload_an_image_to_the_server(filename, access_token, group_id, vk_api_versi
             'photo': file,
         }
         up_response = requests.post(upload_url, files=files)
-        up_response.raise_for_status()
+    up_response.raise_for_status()
     upload_photo = up_response.json()
     photo = upload_photo['photo']
     server = upload_photo['server']
