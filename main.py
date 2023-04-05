@@ -42,17 +42,6 @@ def get_random_comic():
     return comic_url, alt, filename, img_url
 
 
-def get_alt_filename_url(comic_url):
-    """ Получаем запись к комиксу и его название """
-    response = requests.get(comic_url)
-    response.raise_for_status()
-    comic = response.json()
-    img_url = comic['img']
-    alt = comic['alt']
-    filename, _ = get_filename_and_ext(img_url)
-    return alt, filename, img_url
-
-
 def upload_an_image_to_the_server(filename, access_token, group_id, vk_api_version):
     """ Загружаем комикс на сервер ВК """
     url = f'https://api.vk.com/method/photos.getWallUploadServer?'
